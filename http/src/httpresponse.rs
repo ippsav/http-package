@@ -22,6 +22,13 @@ impl<'a> Default for HttpResponse<'a> {
     }
 }
 
+impl<'a> From<HttpResponse<'a>> for String {
+    fn from(res: HttpResponse<'a>) -> Self {
+        format!("{} {} {}\r\n{}Content-Length: {}\r\n\r\n{}", res.version(),res.status_code(),res.status_text(),res.headers(),res.body().len(),res.body())
+    }
+}
+
+
 impl<'a> HttpResponse<'a> {
     pub fn new(
         status_code: &'a str,
@@ -47,6 +54,13 @@ impl<'a> HttpResponse<'a> {
         response.body = body;
 
         response
+    }
+
+    pub fn send(&self, write_stream: &mut impl Write) -> Result<()> {
+        let res = self.clone();
+        let response_string: String = res.into();
+        let _ = write!(write_stream, "{}", response_string)?;
+        Ok(())
     }
 
     pub fn version(&self) -> &str {
