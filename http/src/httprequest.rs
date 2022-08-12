@@ -111,8 +111,8 @@ fn process_headers_line(line: &str) -> (String, String) {
     let mut key = String::from("");
     let mut value = String::from("");
 
-    if let Some((k,v)) = parts {
-        key = k.to_string(); 
+    if let Some((k, v)) = parts {
+        key = k.to_string();
         value = v.trim().to_string();
     };
 
@@ -206,9 +206,3 @@ DATA
         assert_eq!(expected.headers, request.headers);
     }
 }
-
-
-
-
-
-
